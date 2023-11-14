@@ -11,3 +11,7 @@ spec:
     path: apps
     repoURL: https://github.com/morey-tech/argocd-v2.9.0-examples.git
     targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
