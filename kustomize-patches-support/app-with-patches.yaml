@@ -8,17 +8,15 @@ spec:
     name: in-cluster
   project: default
   source:
-    path: guestbook
+    path: kustomize-guestbook
     repoURL: https://github.com/argoproj/argocd-example-apps.git
-    targetRevision: HEAD
-
-## In-line Kustomize on plain Kubernetes manifests.
-    # kustomize:
-    #   patches:
-    #     - target:
-    #         kind: Deployment
-    #         name: guestbook-ui
-    #       patch: |-
-    #         - op: replace
-    #           path: /spec/template/spec/containers/0/ports/0/containerPort
-    #           value: 443
+    targetRevision: master
+    kustomize:
+      patches:
+        - target:
+            kind: Deployment
+            name: guestbook-ui
+          patch: |-
+            - op: replace
+              path: /spec/template/spec/containers/0/ports/0/containerPort
+              value: 443
