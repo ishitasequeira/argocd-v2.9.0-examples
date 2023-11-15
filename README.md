@@ -81,7 +81,7 @@ This was one of the most voted proposals included in the v2.9.0 release. Thank y
 https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Controlling-Resource-Modification/#ignore-certain-changes-to-applications
 
 ### Support for Inline Kustomize Patches
-Argo CD now supports kustomizing plain manifests without a `kustomization.yaml` file through the addition of in-line Kustomize patches in the `source.kustomize.pathces` field of `Applications`.
+Argo CD now supports the addition of in-line Kustomize patches in the `source.kustomize.pathces` field of `Applications`.
 
 ```yaml
 spec:
@@ -101,6 +101,8 @@ spec:
               value: 443
 ```
 
+The inline kustomize patches work well with `ApplicationSets`, too. Instead of maintaining a patch or overlay for each cluster, patches can now be done in the `Application` template and utilize attributes from the generators. For example, with [`external-dns`](https://github.com/kubernetes-sigs/external-dns/) to set the [`txt-owner-id`](https://github.com/kubernetes-sigs/external-dns/blob/e1adc9079b12774cccac051966b2c6a3f18f7872/docs/registry/registry.md?plain=1#L6) to the cluster name.
+
 In an ideal world, the `guestbook` path contains only plain Kubernetes manifests (no `kustomization.yaml`) but through the use of the `patches` field in the `Application`, you can use Kustomize to alter the `Deployment` manifest to use port `443`. However, a `kustomization.yaml` is still required ([#16352](https://github.com/argoproj/argo-cd/issues/16352))
 
 With a `kustomization.yaml` file in the source, the patches from the `Application` will be merged with any existing patches.
@@ -108,6 +110,3 @@ With a `kustomization.yaml` file in the source, the patches from the `Applicatio
 Ref:
 - https://argo-cd.readthedocs.io/en/stable/user-guide/kustomize/#patches
 - https://github.com/argoproj/argo-cd/pull/14648
-
-
-A great way to avoid a maintaining a kustomization of external-dns for every cluster to set [the `txt-owner-id`](https://github.com/kubernetes-sigs/external-dns/blob/e1adc9079b12774cccac051966b2c6a3f18f7872/docs/registry/registry.md?plain=1#L6), instead it can be done in an ApplicationSet with `patches`.
