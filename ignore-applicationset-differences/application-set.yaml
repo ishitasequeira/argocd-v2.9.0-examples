@@ -13,11 +13,11 @@ spec:
       - environment: stage
   # Example
   ignoreApplicationDifferences:
-  # - jsonPointers:
-  #   - /spec/source/targetRevision
+  - jsonPointers:
+    - /spec/source/targetRevision
   - jqPathExpressions:
       - .spec.syncPolicy
-    # name: guestbook-dev
+    name: guestbook-dev
   template:
     metadata:
       name: 'guestbook-{{.environment}}'
