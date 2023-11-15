@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: guestbooks
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - list:
+      elements:
+      - environment: dev
+      - environment: prod
+      - environment: stage
+  # Example
+  ignoreApplicationDifferences:
+  - jsonPointers:
+    - /spec/source/targetRevision
+  - name: guestbook-dev
+    jqExpressions:
+    - .spec.syncPolicy
+  template:
+    metadata:
+      name: 'guestbook-{{.environment}}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/argoproj/argocd-example-apps
+        targetRevision: HEAD
+        path: helm-guestbook
+      helm:
+        releaseName: '{{.environment}}'
+      destination:
+        name: 'in-cluster'
+        namespace: default
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true

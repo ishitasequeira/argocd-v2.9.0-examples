@@ -53,9 +53,28 @@ Open issues:
 - https://github.com/argoproj/argo-cd/issues/16349
 
 ### Ignore ApplicationSet Differences
-The ApplicationSet is a powerful feature that renders Argo CD Applications dynamically based on generators. However, there are situations where another process revises certain fields of an Application after the ApplicationSet creates it. A common example is when using the Argo CD Image Updater with Applications managed by an ApplicationSet. When using the imperative write-back method, Image Updater changes the image tag using a parameter override (argocd app set --parameter …), which, if not ignored, would be overwritten by the ApplicationSet. Or if you simply want to be able to disable auto-sync for one Application managed by an ApplicationSet temporarily.
+The `ApplicationSet` is a powerful feature that renders Argo CD `Applications` dynamically based on generators. However, there are situations where another process revises certain fields of an `Application` after the `ApplicationSet` creates it.
 
-This was one of the most voted proposals for this release! Thank you, Michael Crenshaw (Intuit), for all your interaction with the community and for making this feature happen!
+A common example is when using the Argo CD Image Updater with `Applications` managed by an `ApplicationSet`. When using the imperative write-back method, Image Updater changes the image tag using a parameter override (`argocd app set --parameter …`), which, if not ignored, would be overwritten by the `ApplicationSet`.
+
+Or if you simply want to use `ApplicationSets` to create apps, but allow users to modify those `Applications` (e.g. disable auto-sync temporarily) without having their changes overwritten by the `ApplicationSet`.
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: example
+spec:
+  ...
+  ignoreApplicationDifferences:
+  - jsonPointers:
+    - /spec/source/targetRevision
+  - name: guestbook-dev
+    jqExpressions:
+    - .spec.syncPolicy
+```
+
+This was one of the most voted proposals included in the v2.9.0 release. Thank you to Michael Crenshaw (Intuit) for all your interaction with the community on the issue, and for making this feature happen!
 
 ### Support for Inline Kustomize Patches
 Argo CD Applications now support in-line Kustomize patches. These will be merged with any existing patches in the source `kustomization.yaml`.
