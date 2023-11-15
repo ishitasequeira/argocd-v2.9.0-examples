@@ -25,6 +25,8 @@ kind delete cluster --name argocd-v2-9-0-examples
 ### Dynamically Re-Balance Clusters Across Shards
 The Argo CD application controller can become overloaded when managing multiple remote clusters with many resources. The solution is to run multiple shards of the application controller, where each is responsible for one or more clusters (and each cluster can only belongs to one shard). However, adding new shards requires increasing the number of replicas on the `application-controller` `StatefulSet`. Previously, the shard count was set via the `ARGOCD_CONTROLLER_REPLICAS` environment variable, and changing it forced a restart of all `application-controller` pods. In 2.9, this **alpha feature** updates the `application-controller` to be a `Deployment` (instead of a `StatefulSet`). The `replicas` field is now used for the shard count, and when replicas are added or removed, the sharding algorithm is re-run to ensure that the clusters are distributed accordingly.
 
+In [this example](./dynamic-shard-rebalance/), I take advantage of [Kustomize components](https://github.com/kubernetes-sigs/kustomize/blob/master/examples/components.md#components-example) to patch the `StatefulSet` to `0` replicas and create the `application-controller` `Deployment` with `2` replicas. The `ARGOCD_ENABLE_DYNAMIC_CLUSTER_DISTRIBUTION` environment variable must be set to `true` on the `Pod` for the `application-controller` to enable the cluster shard re-balancing functionality (currently, this breaks the pod due to [#16349](https://github.com/argoproj/argo-cd/issues/16349)).
+
 The `application-controller` `Deployment` relies on a config map to track the mapping of replica (pod) to shard number, and the heartbeat from each shard. If the `argocd-app-controller-shard-cm` does not exist in the same namespace as the `application-controller`, it will create it. Then a shard number (`ShardNumber`) is associated with a `Pod` name (the `ControllerName`). Each shard will update it's heartbeat time (`HeartbeatTime`) when the `readinessProbe` on the `Pod` is called, which is every 10 seconds be default.
 
 ```json
@@ -99,8 +101,13 @@ spec:
               value: 443
 ```
 
-In this example, the `guestbook` path contains only plain Kubernetes manifests (no `kustomization.yaml`) but through the use of the `patches` field in the `Application`, you can use Kustomize to alter the `Deployment` manifest to use port `443`.
+In an ideal world, the `guestbook` path contains only plain Kubernetes manifests (no `kustomization.yaml`) but through the use of the `patches` field in the `Application`, you can use Kustomize to alter the `Deployment` manifest to use port `443`. However, a `kustomization.yaml` is still required ([#16352](https://github.com/argoproj/argo-cd/issues/16352))
 
-If used in combination with a `kustomization.yaml` file in the source, the patches will be merged with any existing patches in the source.
+With a `kustomization.yaml` file in the source, the patches from the `Application` will be merged with any existing patches.
 
-https://argo-cd.readthedocs.io/en/stable/user-guide/kustomize/#patches
+Ref:
+- https://argo-cd.readthedocs.io/en/stable/user-guide/kustomize/#patches
+- https://github.com/argoproj/argo-cd/pull/14648
+
+
+A great way to avoid a maintaining a kustomization of external-dns for every cluster to set [the `txt-owner-id`](https://github.com/kubernetes-sigs/external-dns/blob/e1adc9079b12774cccac051966b2c6a3f18f7872/docs/registry/registry.md?plain=1#L6), instead it can be done in an ApplicationSet with `patches`.

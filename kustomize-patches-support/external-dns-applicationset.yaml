@@ -23,9 +23,8 @@ spec:
               name: external-dns
             patch: |-
               - op: add
-                path: /spec/template/spec/containers/0/args
-                value: 
-                - --txt-owner-id={{.name}}
+                path: /spec/template/spec/containers/0/args/4
+                value: --txt-owner-id={{.name}}
       destination:
         name: 'in-cluster'
         namespace: default
