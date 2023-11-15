@@ -70,11 +70,37 @@ spec:
   - jsonPointers:
     - /spec/source/targetRevision
   - name: guestbook-dev
-    jqExpressions:
+    jqPathExpressions:
     - .spec.syncPolicy
 ```
 
 This was one of the most voted proposals included in the v2.9.0 release. Thank you to Michael Crenshaw (Intuit) for all your interaction with the community on the issue, and for making this feature happen!
 
+https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Controlling-Resource-Modification/#ignore-certain-changes-to-applications
+
 ### Support for Inline Kustomize Patches
-Argo CD Applications now support in-line Kustomize patches. These will be merged with any existing patches in the source `kustomization.yaml`.
+Argo CD now supports kustomizing plain manifests without a `kustomization.yaml` file through the addition of in-line Kustomize patches in the `source.kustomize.pathces` field of `Applications`.
+
+```yaml
+spec:
+  ...
+  source:
+    path: guestbook
+    repoURL: https://github.com/argoproj/argocd-example-apps.git
+    targetRevision: master
+    kustomize:
+      patches:
+        - target:
+            kind: Deployment
+            name: guestbook-ui
+          patch: |-
+            - op: replace
+              path: /spec/template/spec/containers/0/ports/0/containerPort
+              value: 443
+```
+
+In this example, the `guestbook` path contains only plain Kubernetes manifests (no `kustomization.yaml`) but through the use of the `patches` field in the `Application`, you can use Kustomize to alter the `Deployment` manifest to use port `443`.
+
+If used in combination with a `kustomization.yaml` file in the source, the patches will be merged with any existing patches in the source.
+
+https://argo-cd.readthedocs.io/en/stable/user-guide/kustomize/#patches
