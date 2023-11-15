@@ -25,6 +25,9 @@ spec:
               - op: add
                 path: /spec/template/spec/containers/0/args/3
                 value: --txt-owner-id={{.name}}
+              - op: add
+                path: /spec/template/spec/containers/0/args/4
+                value: --provider=coredns
       destination:
         name: 'in-cluster'
         namespace: default
