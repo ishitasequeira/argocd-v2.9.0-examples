@@ -7,10 +7,10 @@ resources:
 - ./namespace.yaml
 - https://raw.githubusercontent.com/argoproj/argo-cd/v2.9.1/manifests/ha/install.yaml
 ## Enable for Dynamic Shard Re-Balancing.
-- ./dynamic-shard-rebalance-patches/argocd-application-controller-deployment.yaml
+- ./dynamic-shard-rebalance/deployment-resource.yaml
 - ./apps.yaml
 
 patches:
 - path: ./service.yaml
 ## Enable for Dynamic Shard Re-Balancing.
-- path: ./dynamic-shard-rebalance-patches/argocd-application-controller-statefulset.yaml
+- path: ./dynamic-shard-rebalance/statefulset-patch.yaml
