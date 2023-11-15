@@ -15,9 +15,9 @@ spec:
   ignoreApplicationDifferences:
   - jsonPointers:
     - /spec/source/targetRevision
-  - name: guestbook-dev
-    jqExpressions:
-    - .spec.syncPolicy
+  - jqExpressions:
+      - .spec.syncPolicy
+    name: guestbook-dev
   template:
     metadata:
       name: 'guestbook-{{.environment}}'
