@@ -12,9 +12,9 @@ spec:
       - environment: prod
       - environment: stage
   # Example
-  ignoreApplicationDifferences:
-  - jsonPointers:
-    - /spec/source/targetRevision
+  # ignoreApplicationDifferences:
+  # - jsonPointers:
+  #   - /spec/source/targetRevision
   # - jqExpressions:
   #     - .spec.syncPolicy
   #   name: guestbook-dev
