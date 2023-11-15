@@ -15,7 +15,7 @@ spec:
   ignoreApplicationDifferences:
   # - jsonPointers:
   #   - /spec/source/targetRevision
-  - jqExpressions:
+  - jqPathExpressions:
       - .spec.syncPolicy
     # name: guestbook-dev
   template:
