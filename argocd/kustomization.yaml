@@ -8,7 +8,6 @@ resources:
 - https://raw.githubusercontent.com/argoproj/argo-cd/v2.9.1/manifests/ha/install.yaml
 ## Enable for Dynamic Shard Re-Balancing.
 - ./dynamic-shard-rebalance/deployment-resource.yaml
-- ./apps.yaml
 
 patches:
 - path: ./service.yaml
