@@ -4,6 +4,7 @@
 ```
 kind create cluster --config kind-cluster.yaml
 kubectl apply -k argocd
+kubectl apply -f apps.yaml
 ```
 
 ## Accessing the UI
