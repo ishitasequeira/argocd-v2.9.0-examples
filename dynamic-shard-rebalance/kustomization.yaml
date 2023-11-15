@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+metadata:
+  name: dynamic-shard-rebalance
+
+resources:
+# Create application-controller Deployment.
+- ./deployment-resource.yaml
+
+patches:
+# Scale application-controller StatefulSet down to zero.
+- path: ./statefulset-patch.yaml
