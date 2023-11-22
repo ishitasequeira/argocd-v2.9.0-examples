@@ -7,6 +7,8 @@ kubectl apply -k argocd
 kubectl apply -f apps.yaml
 ```
 
+This example includes a `devcontainer` configuration, allowing you to automatically create an environment for testing using the VSCode Dev Containers extension or GitHub Codespaces.
+
 ## Accessing the UI
 Navigate to [https://localhost:8080/](https://localhost:8080/) on the machine with the `kind` cluster running.
 
@@ -45,7 +47,7 @@ The `application-controller` `Deployment` relies on a config map to track the ma
 ]
 ```
 
-Users of the default hash-based sharding algorithm won't see any improvements as clusters be roughly-balanced between shards. The dynamic shard re-balancing functionality benefits users of custom shard assignment strategies the most. For users of the round-robin or other custom algorithms, a static assignment can lead to unbalanced shards when replicas are added or removed.
+Users of the default hash-based sharding algorithm won't see any improvements as clusters be roughly-balanced between shards. For users of the round-robin or other custom algorithms, a static assignment can lead to unbalanced shards when replicas are added or removed. So, the dynamic shard re-balancing functionality benefits users of custom shard assignment strategies the most.
 
 Thanks, Ishita Sequeira (Red Hat), for writing the initial proposal and [implementing the whole feature](https://github.com/argoproj/argo-cd/pull/15036)!
 
@@ -87,7 +89,7 @@ Argo CD now supports the addition of in-line Kustomize patches in the `source.ku
 spec:
   ...
   source:
-    path: guestbook
+    path: kustomize-guestbook
     repoURL: https://github.com/argoproj/argocd-example-apps.git
     targetRevision: master
     kustomize:
