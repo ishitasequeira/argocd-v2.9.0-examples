@@ -29,8 +29,8 @@ spec:
                 path: /spec/template/spec/containers/0/args/4
                 value: --provider=coredns
       destination:
-        name: 'in-cluster'
-        namespace: default
+        name: {{.name}}
+        namespace: external-dns
       syncPolicy:
         automated:
           prune: true
