@@ -29,7 +29,7 @@ spec:
                 path: /spec/template/spec/containers/0/args/4
                 value: --provider=coredns
       destination:
-        name: {{.name}}
+        name: '{{.name}}'
         namespace: external-dns
       syncPolicy:
         automated:
