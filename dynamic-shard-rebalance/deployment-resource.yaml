@@ -170,7 +170,7 @@ spec:
                 name: argocd-cmd-params-cm
                 key: controller.k8sclient.retry.base.backoff
                 optional: true
-        image: quay.io/argoproj/argocd:v2.9.0
+        image: quay.io/isequeir/argocd:latest
         imagePullPolicy: Always
         name: argocd-application-controller
         ports:
